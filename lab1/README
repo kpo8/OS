@@ -1,0 +1,16 @@
+LAB1
+kevin O'Neil, Garret Mcdonnell, Aleks Drobnjak
+
+Print function was modified to be able to print characters to the screen or a virtual printer
+This was done by using a while loop and sending one character down to the assembly code function
+per loop
+
+Print function was then abandoned in favor of assemble code interrupt function all function calls 
+were replaced with interrupt function in order to comply with lab.
+
+Verification
+You can verify this lab works by running the compileOS.sh script. This will build the assembler and 
+kernal as well as tar it up for you...
+
+then proceed to run bochs and you should get the bochs logo on the screen, and a hello world from 
+the printer.out function

@@ -1,0 +1,19 @@
+LAB2
+kevin O'Neil, Garret Mcdonnell, Aleks Drobnjak
+
+ReadString
+This function allows us to write characters to a screen using interrupt 22 to store characters and 33 to
+print them to a screen.It also allow you to backspace and change characters
+
+ReadInt
+Takes a string and writes converts to a string
+
+WriteInt
+Takes int and converts to string
+Verification
+
+You can verify this lab works by running the compileOS.sh script. This will build the assembler and 
+kernal as well as tar it up for you...
+
+then proceed to run bochs and you should be able to do the madlibb exercise. Check the printout function
+for veracity.

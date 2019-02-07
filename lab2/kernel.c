@@ -128,7 +128,7 @@ void readString(char* input)
 
     //if user types a backspace
     if(*c == 8){
-      interrupt(16, 14*256+input[i], 0, 0, 0);
+      interrupt(16, 14*256+*c, 0, 0, 0);
       i--;
     }
     else{

@@ -21,4 +21,4 @@ dd if=kernel of=floppya.img bs=512 conv=notrunc seek=259
 echo "tarring lab"
 cd ..
 tar -czvf kevinONeil_GarretMcDonnel_AleksDrobnjak.tar.gz lab1
-mv kevinONeil_GarretMcDonnel_AleksDrobnjak.tar.gz  lab1/ 
+mv kevinONeil_GarretMcDonnel_AleksDrobnjak.tar.gz  lab2/ 

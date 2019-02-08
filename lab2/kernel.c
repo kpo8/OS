@@ -91,6 +91,33 @@ void main()
 	*/
 }
 
+void readInt(int* n)
+{
+	int pos;
+	char strToIntConvert[5];
+	*n = 0;
+	interrupt(33,1,&strToIntConvert,0,0);
+
+	for(pos = 0; strToIntConvert[pos] != '\0'; ++pos)
+	{
+		*n = *n * 10 + strToIntConvert[pos] - '0';
+	}
+}
+
+void writeInt(int x)
+{
+	char intToConvertStr[5];
+	int pos = 2;
+
+	while(x != 0)
+	{
+		intToConvertStr[pos] = (mod(x, 10) + '0');
+		x = div(x, 10);
+		--pos;	
+	}	
+	interrupt(33,0, intToConvertStr,1,0);
+}
+
 int mod(int a, int b) 
 {
 	int x = a;
@@ -175,34 +202,6 @@ void readString(char* input)
 	printString("\r\n\0",0);
 	printString(input,0);
 	printString("\r\n\0",0);
-}
-
-void readInt(int* n)
-{
-	int pos;
-	char strToConvert[5];
-
-	interrupt(33,1,&strToConvert,0,0);
-
-	for(pos = 0; strToConvert[pos] != '\0'; ++pos)
-	{
-		*n = *n * 10 + strToConvert[pos] - '0';
-	}
-
-}
-
-void writeInt(int x)
-{
-	char intToConvert[5];
-	int pos = 0;
-
-	while(x != 0)
-	{
-		intToConvert[pos++] = (mod(x, 10) + '0');
-		x = div(x, 10);
-	}
-	
-	interrupt(33,0, &intToConvert,1,0);
 }
 
 void printLogo()

@@ -106,15 +106,17 @@ void readInt(int* n)
 
 void writeInt(int x)
 {
-	char intToConvertStr[5];
-	int pos = 2;
-
+	char intToConvertStr[6];
+	int pos = 3;
+	intToConvertStr[pos] = '\0';
+	--pos;
 	while(x != 0)
 	{
 		intToConvertStr[pos] = (mod(x, 10) + '0');
 		x = div(x, 10);
 		--pos;	
-	}	
+	}
+		
 	interrupt(33,0, intToConvertStr,1,0);
 }
 

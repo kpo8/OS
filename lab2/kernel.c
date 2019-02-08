@@ -139,19 +139,22 @@ void printString(char* c, int d)
 // takes string as input and then displays it
 void readString(char* input)
 {
-	int i;
-
-	for(i = 0; i < 80; ++i)
+	int i =0;
+	char* c;
+	while(i < 80)
 	{
-		char* c = interrupt(22,0,0,0,0);
+		 c = interrupt(22,0,0,0,0);
 
 		//if user types a backspace
-		if(*c == 8)
+		if(c == 8)
 		{
-			interrupt(16, 14*256+*c, 0, 0, 0);
-			i--;
+			if(i != 0)
+			{
+				interrupt(16, 14*256+c, 0, 0, 0);
+				i--;
+			}
 		}
-		else
+		if(c != 8)
 		{
 			input[i] = c;
 
@@ -164,6 +167,7 @@ void readString(char* input)
 			else
 			{
 				interrupt(16, 14*256+input[i], 0, 0, 0);
+				++i;
 			}
 		}
 	}

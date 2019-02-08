@@ -1,16 +1,19 @@
 LAB2
 kevin O'Neil, Garret Mcdonnell, Aleks Drobnjak
 
-Print function was modified to be able to print characters to the screen or a virtual printer
-This was done by using a while loop and sending one character down to the assembly code function
-per loop
+ReadString
+This function allows us to write characters to a screen using interrupt 22 to store characters and 33 to
+print them to a screen.It also allow you to backspace and change characters
 
-Print function was then abandoned in favor of assemble code interrupt function all function calls 
-were replaced with interrupt function in order to comply with lab.
+ReadInt
+Takes a string and writes converts to a string
 
+WriteInt
+Takes int and converts to string
 Verification
+
 You can verify this lab works by running the compileOS.sh script. This will build the assembler and 
 kernal as well as tar it up for you...
 
-then proceed to run bochs and you should get the bochs logo on the screen, and a hello world from 
-the printer.out function
+then proceed to run bochs and you should be able to do the madlibb exercise. Check the printout function
+for veracity.

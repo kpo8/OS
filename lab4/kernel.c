@@ -35,21 +35,17 @@ void readInt(int*);
 void writeInt(int);
 int mod(int, int);
 int div(int, int);
+void error(int bx);
 
 void main()
 {
-	char buffer[512]; int i;
+	char buffer[12288]; int size;
 	makeInterrupt21();
-	for (i = 0; i < 512; i++) buffer[i] = 0;
-	buffer[0] = 0;
-	buffer[1] = 4;
-	interrupt(33,6,buffer,258,0);
+
+	/* Step 0 – config file */
+	interrupt(33,2,buffer,258,0);
 	interrupt(33,12,buffer[0]+1,buffer[1]+1,0);
 	printLogo();
-	interrupt(33,2,buffer,30,0);
-	interrupt(33,0,buffer,0,0);
-	while (1);
-	
 }
 
 void readInt(int* n)

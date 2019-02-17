@@ -24,6 +24,8 @@ dd if=kernel of=floppya.img bs=512 conv=notrunc seek=259
 #hexdump it to make sure it is right
 hexdump -C floppya.img
 
+#This maybe lab4 specific but it cannot hurt having it in here
+gcc loadFile.c -o loadfile
 
 #echo "tarring lab"
 #cd ..

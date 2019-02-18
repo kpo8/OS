@@ -61,7 +61,7 @@ void readFile(char* fname, char* buffer, int* size)
 {
 	/*257 is where the directory is*/
 	int i =0;
-	int k = 512;
+	int k = 0;
 	int q =0;
 	char bufferDirectory[512];
 	interrupt(33,2,bufferDirectory,257,0);
@@ -69,32 +69,28 @@ void readFile(char* fname, char* buffer, int* size)
 	interrupt(33,0,bufferDirectory,0,0);
 	interrupt(33,0,"\r\n\0",0,0);
 
-	/*while(fname[i] != '\0')
+	while(fname[i] != '\0')
 	{
 		if(bufferDirectory[k] == '\0')
 		{
 			interrupt(33,0,"File not found",0,0);
 			break;
 		}
-		if(fname[i] == bufferDirectory[k])
+		if(fname[i] == bufferDirectory[i])
 		{
 			++i;
 		}
-		if((fname[i] != bufferDirectory[k]) && (i > 0))
-		{
-			--i;
-		}
-		++k;
+	++k;
 	}
 	if(fname[i] == '\0')
 	{
-			interrupt(33,0,"File not found",0,0);
+			interrupt(33,0,"File found",0,0);
 	}
 	while(q <512)
 	{
 		buffer[q] = bufferDirectory[q];
 	}
-	*/
+	
 }	
 
 

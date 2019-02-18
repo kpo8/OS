@@ -46,22 +46,47 @@ void main()
 	/* Step 0 – config file */
 	interrupt(33,2,buffer,258,0);
 	interrupt(33,12,buffer[0]+1,buffer[1]+1,0);
-//	printLogo();
+	printLogo();
 
 	/* Step 1 – load/edit/print file */
 	interrupt(33,3,"spc03\0",buffer,&size);
-	//buffer[7] = ‘2’; buffer[8] = ‘0’;
-	//buffer[9] = ‘1’; buffer[10] = ‘9’;
-	//interrupt(33,0,buffer,0,0);
-	//interrupt(33,0,"\r\n\0",0,0);
+	buffer[7] = ‘2’; buffer[8] = ‘0’;
+	buffer[9] = ‘1’; buffer[10] = ‘9’;
+	interrupt(33,0,buffer,0,0);
+	interrupt(33,0,"\r\n\0",0,0);
+	while(1);
 }
 
 void readFile(char* fname, char* buffer, int* size)
 {
 	/*257 is where the directory is*/
-	interrupt(33,2,buffer,257,0);	
-	interrupt(33,0,"I came down with a fever of \0",1,0);	
-	interrupt(33,0,buffer,1,0);	
+	int i =0;
+	int k = 512;
+	char bufferDirectory[512];
+	interrupt(33,2,bufferDirectory,257,0);
+	
+	while(fname[i] != '\0')
+	{
+		if(bufferDirectory[k] == '\0')
+		{
+			interrupt(33,0,"File not found",0,0);
+			break;
+		}
+		if(fname[i] == bufferDirectory[k])
+		{
+			++i;
+		}
+		if((fname[i] != bufferDirectory[k]) && (i > 0))
+		{
+			--i;
+		}
+		++k;
+	}
+	if(fname[i] == '\0')
+	{
+			interrupt(33,0,"File not found",0,0);
+	}
+
 }	
 
 

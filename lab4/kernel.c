@@ -40,7 +40,8 @@ void readFile(char* fname, char* buffer, int* size);
 
 void main()
 {
-	char buffer[12288]; int size;
+	char buffer[12288]; 
+	int size=0;
 	makeInterrupt21();
 
 	/* Step 0 – config file */
@@ -52,8 +53,8 @@ void main()
 	interrupt(33,3,"spc03\0",buffer,&size);
 	buffer[7] = ‘2’; buffer[8] = ‘0’;
 	buffer[9] = ‘1’; buffer[10] = ‘9’;
-//	interrupt(33,0,buffer,0,0);
-//	interrupt(33,0,"\r\n\0",0,0);
+	interrupt(33,0,buffer,0,0);
+	interrupt(33,0,"\r\n\0",0,0);
 	while(1);
 }
 
@@ -66,9 +67,6 @@ void readFile(char* fname, char* buffer, int* size)
 	char bufferDirectory[512];
 	interrupt(33,2,bufferDirectory,257,0);
 	
-	interrupt(33,0,bufferDirectory,0,0);
-	interrupt(33,0,"\r\n\0",0,0);
-
 	while(fname[i] != '\0')
 	{
 		if(bufferDirectory[k] == '\0')
@@ -84,13 +82,16 @@ void readFile(char* fname, char* buffer, int* size)
 	}
 	if(fname[i] == '\0')
 	{
-			interrupt(33,0,"File found",0,0);
-	}
-	while(q <512)
-	{
-		buffer[q] = bufferDirectory[q];
-	}
-	
+		interrupt(33,0,"File found\r\n\0",0,0);	
+		size = 512 + *size;
+		
+		while(q < size)
+		{
+			buffer[size + q] = bufferDirectory[q];
+			++q; 
+		}
+
+	}	
 }	
 
 

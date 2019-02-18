@@ -52,8 +52,8 @@ void main()
 	interrupt(33,3,"spc03\0",buffer,&size);
 	buffer[7] = ‘2’; buffer[8] = ‘0’;
 	buffer[9] = ‘1’; buffer[10] = ‘9’;
-	interrupt(33,0,buffer,0,0);
-	interrupt(33,0,"\r\n\0",0,0);
+//	interrupt(33,0,buffer,0,0);
+//	interrupt(33,0,"\r\n\0",0,0);
 	while(1);
 }
 
@@ -62,10 +62,14 @@ void readFile(char* fname, char* buffer, int* size)
 	/*257 is where the directory is*/
 	int i =0;
 	int k = 512;
+	int q =0;
 	char bufferDirectory[512];
 	interrupt(33,2,bufferDirectory,257,0);
 	
-	while(fname[i] != '\0')
+	interrupt(33,0,bufferDirectory,0,0);
+	interrupt(33,0,"\r\n\0",0,0);
+
+	/*while(fname[i] != '\0')
 	{
 		if(bufferDirectory[k] == '\0')
 		{
@@ -86,7 +90,11 @@ void readFile(char* fname, char* buffer, int* size)
 	{
 			interrupt(33,0,"File not found",0,0);
 	}
-
+	while(q <512)
+	{
+		buffer[q] = bufferDirectory[q];
+	}
+	*/
 }	
 
 

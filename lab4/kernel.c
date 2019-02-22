@@ -80,12 +80,12 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	while(k < 512)
 	{
 		//This condition means we no free space
-		if(k == 511 && bufferDirectory[k] != 0)
+		if(k == 511 && bufferDirectory[k/16] != 0 && k % 16 == 0)
 		{
 			interrupt(33,15,2,0,0);
 			break;
 		}
-		if(bufferDirectory[k] == 0)
+		if(k % 16 == 0 && bufferDirectory[k /16] == 0)
 		{
 			interrupt(33,0,"Free Space found",0,0);
 			break;

@@ -67,9 +67,7 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 {
 	char bufferDirectory[512];
 	char bufferMap[512];
-	int i =0;
 	int k = 0;
-	int q =0;
 
 	/*257 is where the directory is*/
 	interrupt(33,2,bufferDirectory,257,0);
@@ -79,24 +77,25 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	
 	while(k < 512)
 	{
-		//This condition means we no free space
-		if(k == 511 && bufferDirectory[k/16] != 0 && k % 16 == 0)
-		{
-			interrupt(33,15,2,0,0);
-			break;
-		}
-		if(k % 16 == 0 && bufferDirectory[k /16] == 0)
+		//free space 
+		if(k % 32 == 0 && bufferDirectory[k] == 0)
 		{
 			interrupt(33,0,"Free Space found",0,0);
+			break;
+		}
+		//no space
+		else
+		{
+			interrupt(33,15,2,0,0);
 			break;
 		}
 		++k;
 	}
 	//This condition happens that means we have a bad file name
-	if(name[i] == '\0')
-	{
-		interrupt(33,15,1,0,0);	
-	}	
+//	if(name[i] == '\0')
+//	{
+//		interrupt(33,15,1,0,0);	
+//	}	
 }
 
 void readFile(char* fname, char* buffer, int* size)

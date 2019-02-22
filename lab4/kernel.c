@@ -58,7 +58,7 @@ void main()
 	interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
-	interrupt(33,8,"spr19\0",buffer,size);
+//	interrupt(33,8,"spr19\0",buffer,size);
 
 	while(1);
 }
@@ -104,38 +104,45 @@ void readFile(char* fname, char* buffer, int* size)
 	int i =0;
 	int k = 0;
 	int q =0;
+	int getNameLength =0;
 	char bufferDirectory[512];
 	interrupt(33,2,bufferDirectory,257,0);
-	
+
 	while(fname[i] != '\0')
 	{
-		if(k == 511 && bufferDirectory[k] == '\0')
+		++getNameLength;
+		++i;
+	}
+	i =0;
+	
+
+	while(i < 512 - getNameLength)
+	{	
+		for(k=0; k< getNameLength; ++k)
 		{
-			interrupt(33,15,0,0,0);
-			break;
-		}
-		if(fname[i] == bufferDirectory[i])
-		{
-			++i;
-			if(fname[i] == '\0')
+			if(bufferDirectory[i +k] != fname[k])
 			{
 				break;
 			}
 		}
-		++k;
-	}
-	if(fname[i] == '\0')
-	{
-		interrupt(33,0,"File found\r\n\0",0,0);	
-		size = 512 + *size;
-		
-		while(q < size)
+		if(k == getNameLength)
 		{
-			buffer[*size + q] = bufferDirectory[q];
-			++q; 
+			interrupt(33,0,"File found\r\n\0",0,0);
+			size = 512 + *size;
+		
+			while(q < size)
+			{
+				buffer[*size + q] = bufferDirectory[q];
+				++q; 
+			}
+			break;
 		}
-
+		++i;
 	}	
+	if(i+1 > 512-getNameLength)
+	{
+		interrupt(33,15,0,0,0);
+	}
 }	
 
 void error(int bx)

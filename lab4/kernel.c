@@ -71,7 +71,7 @@ void readFile(char* fname, char* buffer, int* size)
 	{
 		if(bufferDirectory[k] == '\0')
 		{
-			interrupt(33,0,"File not found",0,0);
+			interrupt(33,15,0,0,0);
 			break;
 		}
 		if(fname[i] == bufferDirectory[i])
@@ -93,6 +93,25 @@ void readFile(char* fname, char* buffer, int* size)
 
 	}	
 }	
+
+void error(int bx)
+{
+	switch(bx)
+	{
+		case 0:
+			interrupt(33,0,"File not found",0,0);
+			break;
+		case 1:
+			interrupt(33,0,"Bad file name.",0,0);
+			break;
+		case 2:
+			interrupt(33,0,"Disk full",0,0);
+			break;
+		default:
+			interrupt(33,0,"General error",0,0);
+			break;
+	}
+}
 
 
 void readInt(int* n)
@@ -306,7 +325,9 @@ void handleInterrupt21(int ax, int bx, int cx, int dx)
 		case 14:
 			readInt(bx);
 			break;
-		/*  case 15: */
+		case 15: 
+			error(bx);
+			break;
 		default:
 		printString("General BlackDOS error.\r\n\0");
 	}

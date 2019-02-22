@@ -37,6 +37,7 @@ int mod(int, int);
 int div(int, int);
 void error(int bx);
 void readFile(char* fname, char* buffer, int* size);
+void writeFile(char* name, char* buffer, int numberOfSectors);
 
 void main()
 {
@@ -55,7 +56,47 @@ void main()
 	buffer[9] = ‘1’; buffer[10] = ‘9’;
 	interrupt(33,0,buffer,0,0);
 	interrupt(33,0,"\r\n\0",0,0);
+
+	/* Step 2 – write revised file */
+	interrupt(33,8,"spr19\0",buffer,size);
+
 	while(1);
+}
+
+void writeFile(char* name, char* buffer, int numberOfSectors)
+{
+	char bufferDirectory[512];
+	char bufferMap[512];
+	int i =0;
+	int k = 0;
+	int q =0;
+
+	/*257 is where the directory is*/
+	interrupt(33,2,bufferDirectory,257,0);
+	/*256 is where the directory is*/
+	interrupt(33,2,bufferMap,256,0);
+	
+	
+	while(k < 512)
+	{
+		//This condition means we no free space
+		if(k == 511 && bufferDirectory[k] != 0)
+		{
+			interrupt(33,15,2,0,0);
+			break;
+		}
+		if(bufferDirectory[k] == 0)
+		{
+			interrupt(33,0,"Free Space found",0,0);
+			break;
+		}
+		++k;
+	}
+	//This condition happens that means we have a bad file name
+	if(name[i] == '\0')
+	{
+		interrupt(33,15,1,0,0);	
+	}	
 }
 
 void readFile(char* fname, char* buffer, int* size)
@@ -69,7 +110,7 @@ void readFile(char* fname, char* buffer, int* size)
 	
 	while(fname[i] != '\0')
 	{
-		if(bufferDirectory[k] == '\0')
+		if(k == 511 && bufferDirectory[k] == '\0')
 		{
 			interrupt(33,15,0,0,0);
 			break;
@@ -77,8 +118,12 @@ void readFile(char* fname, char* buffer, int* size)
 		if(fname[i] == bufferDirectory[i])
 		{
 			++i;
+			if(fname[i] == '\0')
+			{
+				break;
+			}
 		}
-	++k;
+		++k;
 	}
 	if(fname[i] == '\0')
 	{
@@ -313,8 +358,11 @@ void handleInterrupt21(int ax, int bx, int cx, int dx)
 		case 6:
 			writeSector(bx,cx);
 			break;
+		case 8:
+			 writeFile(bx,cx,dx);
+			 break;
 		/*  case 4: case 5: */
-		/*  case 7: case 8: case 9: case 10: */
+		/*  case 7: case 9: case 10: */
 		/*  case 11:  */
 		case 12:
 			clearScreen(bx,cx);

@@ -58,7 +58,7 @@ void main()
 	interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
-//	interrupt(33,8,"spr19\0",buffer,size);
+	interrupt(33,8,"spr19\0",buffer,size);
 
 	while(1);
 }
@@ -68,12 +68,19 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	char bufferDirectory[512];
 	char bufferMap[512];
 	int k = 0;
-
+	int getNameLength = 0;
+	int i = 0;
 	/*257 is where the directory is*/
 	interrupt(33,2,bufferDirectory,257,0);
 	/*256 is where the directory is*/
 	interrupt(33,2,bufferMap,256,0);
 	
+	while(name[i] != '\0')
+	{
+		++getNameLength;
+		++i;
+	}
+
 	
 	while(k < 512)
 	{
@@ -83,7 +90,24 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 			interrupt(33,0,"Free Space found",0,0);
 			break;
 		}
-		//no space
+		//check for name
+		if(k % 32 == 0 && bufferDirectory[k] != 0)
+		{
+			for(i=0; i< getNameLength; ++i)
+			{
+				if(bufferDirectory[i+k] != name[i])
+				{
+					break;
+				}
+			}
+			if(i == getNameLength)
+			{
+				interrupt(33,15,1,0,0);
+				break;
+			}
+		}
+
+		//full disk
 		else
 		{
 			interrupt(33,15,2,0,0);
@@ -91,11 +115,6 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 		}
 		++k;
 	}
-	//This condition happens that means we have a bad file name
-//	if(name[i] == '\0')
-//	{
-//		interrupt(33,15,1,0,0);	
-//	}	
 }
 
 void readFile(char* fname, char* buffer, int* size)

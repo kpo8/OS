@@ -87,7 +87,7 @@ void readFile(char* fname, char* buffer, int* size)
 		
 		while(q < size)
 		{
-			buffer[size + q] = bufferDirectory[q];
+			buffer[*size + q] = bufferDirectory[q];
 			++q; 
 		}
 

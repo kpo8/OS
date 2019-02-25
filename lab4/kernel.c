@@ -54,7 +54,6 @@ void main()
 	interrupt(33,3,"spc03\0",buffer,&size);
 	buffer[7] = '2'; buffer[8] = '0';
 	buffer[9] = '1'; buffer[10] = '9';
-	interrupt(33,0,buffer,0,0);
 	interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
@@ -70,6 +69,12 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	int k = 32;
 	int getNameLength = 0;
 	int i = 0;
+	int f = 0;
+	int g = 0;
+	int q = 0;
+	int bytesToFill = 0;
+	int pos = 0;
+	int emptySectors = 0;
 	/*257 is where the directory is*/
 	interrupt(33,2,bufferDirectory,257,0);
 	/*256 is where the directory is*/
@@ -84,10 +89,66 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	
 	while(k < 512)
 	{
+
 		//free space 
 		if(bufferDirectory[k] == 0)
 		{
+			
 			interrupt(33,0,"Free Space found",0,0);
+
+			// Inserts the file name filling the end with 0
+			while(q != getNameLength)
+			{
+				bufferDirectory[k + q] = name[q];
+				++q;
+			}
+
+			if (getNameLength < 8)
+			{
+
+				bytesToFill = 8 - getNameLength;
+				pos = 0;
+				while (bytesToFill != 0)
+				{
+					bufferDirectory[k + getNameLength + pos] = 0;
+					++ pos; -- bytesToFill;
+				}
+
+			}
+
+			// Finds the required amount of empty sectors to put the file in
+			while(f < numberOfSectors + 1)
+			{
+				interrupt(33,0,"s\r\n\0",0,0);
+				g = 0;
+				// Finds empty sectors from the map
+				while(bufferMap[g] != 0)
+				{
+					++g;
+				}
+
+				// Updates map and directory
+				bufferMap[g] = 255;
+				bufferDirectory[k + 8 + f] = g;
+
+				// writes 512 bits at a time to the specified empty sector
+				interrupt(33,6,buffer + 512 * f,g,0);
+				++f;
+			}
+
+
+			// fills in remaining directory sectors with a 0
+			emptySectors = 24 - f;
+			while(f != 0)
+			{
+				bufferDirectory[k + 8 + f] = g;
+				--f;
+			}
+
+			// Writes the map and directory back
+			interrupt(33,0,"Wrote back",0,0);
+			interrupt(33,6,bufferMap,256,0);
+			interrupt(33,6,bufferDirectory,257,0);
 			break;
 		}
 		//check for name
@@ -162,6 +223,8 @@ void readFile(char* fname, char* buffer, int* size)
 				}
 				else
 				{
+					// Updates the amounts of sectors requried by file
+					*size = q;
 					break;
 				}
 

@@ -52,13 +52,13 @@ void main()
 
 	/* Step 1 – load/edit/print file */
 	interrupt(33,3,"spc03\0",buffer,&size);
-	buffer[7] = ‘2’; buffer[8] = ‘0’;
-	buffer[9] = ‘1’; buffer[10] = ‘9’;
+	buffer[7] = '2'; buffer[8] = '0';
+	buffer[9] = '1'; buffer[10] = '9';
 	interrupt(33,0,buffer,0,0);
 	interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
-	interrupt(33,8,"spr19\0",buffer,size);
+	interrupt(33,8,"sp19\0",buffer,size);
 
 	while(1);
 }
@@ -67,7 +67,7 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 {
 	char bufferDirectory[512];
 	char bufferMap[512];
-	int k = 0;
+	int k = 32;
 	int getNameLength = 0;
 	int i = 0;
 	/*257 is where the directory is*/
@@ -85,13 +85,13 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 	while(k < 512)
 	{
 		//free space 
-		if(k % 32 == 0 && bufferDirectory[k] == 0)
+		if(bufferDirectory[k] == 0)
 		{
 			interrupt(33,0,"Free Space found",0,0);
 			break;
 		}
 		//check for name
-		if(k % 32 == 0 && bufferDirectory[k] != 0)
+		if(bufferDirectory[k] != 0)
 		{
 			for(i=0; i< getNameLength; ++i)
 			{
@@ -113,7 +113,7 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 			interrupt(33,15,2,0,0);
 			break;
 		}
-		++k;
+		k += 32;
 	}
 }
 
@@ -133,31 +133,45 @@ void readFile(char* fname, char* buffer, int* size)
 		++i;
 	}
 	i =0;
-	
 
-	while(i < 512 - getNameLength)
+	// Goes through all 16 files in directory
+	while(i < 512)
 	{	
+		// Checks to see if filename matches specified file
 		for(k=0; k< getNameLength; ++k)
 		{
+
 			if(bufferDirectory[i +k] != fname[k])
 			{
 				break;
 			}
 		}
+		// If the file name matches
 		if(k == getNameLength)
 		{
 			interrupt(33,0,"File found\r\n\0",0,0);
-			size = 512 + *size;
-		
-			while(q < size)
+			// After finding file, using the 24 remaining bytes of the sector, read each sector until '0' is reached
+			// denoting the end of the file
+			while(q < 24)
 			{
-				buffer[*size + q] = bufferDirectory[q];
-				++q; 
+				int currentSector = bufferDirectory[i + 8 + q];
+
+				// Read each sector into buffer
+				if(currentSector != 0){
+					readSector(buffer + 512 * q, currentSector);
+				}
+				else
+				{
+					break;
+				}
+
+				++q;				
 			}
 			break;
 		}
-		++i;
-	}	
+		i += 32;
+	}
+	// If file wasn't found
 	if(i+1 > 512-getNameLength)
 	{
 		interrupt(33,15,0,0,0);

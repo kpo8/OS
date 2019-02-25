@@ -94,7 +94,7 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 		if(bufferDirectory[k] == 0)
 		{
 			
-			interrupt(33,0,"Free Space found",0,0);
+			interrupt(33,0,"Free Space found\r\n\0",0,0);
 
 			// Inserts the file name filling the end with 0
 			while(q != getNameLength)
@@ -117,9 +117,8 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 			}
 
 			// Finds the required amount of empty sectors to put the file in
-			while(f < numberOfSectors + 1)
+			while(f < numberOfSectors)
 			{
-				interrupt(33,0,"s\r\n\0",0,0);
 				g = 0;
 				// Finds empty sectors from the map
 				while(bufferMap[g] != 0)
@@ -139,10 +138,11 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 
 			// fills in remaining directory sectors with a 0
 			emptySectors = 24 - f;
-			while(f != 0)
+			while(emptySectors != 0)
 			{
-				bufferDirectory[k + 8 + f] = g;
-				--f;
+				interrupt(33,0,"s\r\n\0",0,0);
+				bufferDirectory[k + 8 + f] = 0;
+				--emptySectors;
 			}
 
 			// Writes the map and directory back

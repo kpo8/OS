@@ -38,6 +38,7 @@ int div(int, int);
 void error(int bx);
 void readFile(char* fname, char* buffer, int* size);
 void writeFile(char* name, char* buffer, int numberOfSectors);
+void deleteFile(char* name);
 
 void main()
 {
@@ -54,12 +55,65 @@ void main()
 	interrupt(33,3,"spc03\0",buffer,&size);
 	buffer[7] = '2'; buffer[8] = '0';
 	buffer[9] = '1'; buffer[10] = '9';
-	interrupt(33,0,"\r\n\0",0,0);
+	interrupt(33,0,buffer,0,0);
+	//interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
-	interrupt(33,8,"sp19\0",buffer,size);
+//	interrupt(33,8,"sp19\0",buffer,size);
+	
+	/* Step 3 – delete original file */
+//	interrupt(33,7,"spc03\0",0,0);
 
 	while(1);
+}
+
+void deleteFile(char* name) 
+{
+	/*257 is where the directory is*/
+	int i =0;
+	int k = 0;
+	int q =0;
+	int getNameLength =0;
+	char bufferDirectory[512];
+	interrupt(33,2,bufferDirectory,257,0);
+
+	while(name[i] != '\0')
+	{
+		++getNameLength;
+		++i;
+	}
+	i =0;
+
+	// Goes through all 16 files in directory
+	while(i < 512)
+	{	
+		// Checks to see if filename matches specified file
+		for(k=0; k< getNameLength; ++k)
+		{
+
+			if(bufferDirectory[i +k] != name[k])
+			{
+				break;
+			}
+		}
+		// If the file name matches
+		if(k == getNameLength)
+		{
+			interrupt(33,0,"File found, deleting\r\n\0",0,0);
+			// After finding file, using the 24 remaining bytes of the sector, read each sector until '0' is reached
+			// denoting the end of the file
+
+			//Here is where we *delete* the file
+
+		}
+		i += 32;
+	}
+	// If file wasn't found
+	if(i+1 > 512-getNameLength)
+	{
+		interrupt(33,15,0,0,0);
+	}
+
 }
 
 void writeFile(char* name, char* buffer, int numberOfSectors)
@@ -140,7 +194,7 @@ void writeFile(char* name, char* buffer, int numberOfSectors)
 			emptySectors = 24 - f;
 			while(emptySectors != 0)
 			{
-				interrupt(33,0,"s\r\n\0",0,0);
+			//	interrupt(33,0,"s\r\n\0",0,0);
 				bufferDirectory[k + 8 + f] = 0;
 				--emptySectors;
 			}
@@ -459,6 +513,9 @@ void handleInterrupt21(int ax, int bx, int cx, int dx)
 
 		case 6:
 			writeSector(bx,cx);
+			break;
+		case 7:
+			deleteFile(bx);
 			break;
 		case 8:
 			 writeFile(bx,cx,dx);

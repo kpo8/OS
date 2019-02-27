@@ -62,7 +62,7 @@ void main()
 //	interrupt(33,8,"sp19\0",buffer,size);
 	
 	/* Step 3 – delete original file */
-//	interrupt(33,7,"spc03\0",0,0);
+	interrupt(33,7,"spc03\0",0,0);
 
 	while(1);
 }
@@ -104,7 +104,9 @@ void deleteFile(char* name)
 		{
 			interrupt(33,0,"File found, deleting\r\n\0",0,0);
 			//If match set first byte of name to zero	
-			bufferDirectory[k-getNameLength]= '0';
+			bufferDirectory[i]= '0';
+			interrupt(33,6,bufferDirectory,257,0);
+			break;
 
 		}
 		i += 32;

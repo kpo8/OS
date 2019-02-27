@@ -52,10 +52,10 @@ void main()
 	printLogo();
 
 	/* Step 1 – load/edit/print file */
-	interrupt(33,3,"spc03\0",buffer,&size);
-	buffer[7] = '2'; buffer[8] = '0';
-	buffer[9] = '1'; buffer[10] = '9';
-	interrupt(33,0,buffer,0,0);
+//	interrupt(33,3,"spc03\0",buffer,&size);
+//	buffer[7] = '2'; buffer[8] = '0';
+//	buffer[9] = '1'; buffer[10] = '9';
+//	interrupt(33,0,buffer,0,0);
 	//interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
@@ -75,7 +75,10 @@ void deleteFile(char* name)
 	int q =0;
 	int getNameLength =0;
 	char bufferDirectory[512];
+	char bufferMap[512];
+
 	interrupt(33,2,bufferDirectory,257,0);
+	interrupt(33,2,bufferMap,256,0);
 
 	while(name[i] != '\0')
 	{
@@ -100,10 +103,8 @@ void deleteFile(char* name)
 		if(k == getNameLength)
 		{
 			interrupt(33,0,"File found, deleting\r\n\0",0,0);
-			// After finding file, using the 24 remaining bytes of the sector, read each sector until '0' is reached
-			// denoting the end of the file
-
-			//Here is where we *delete* the file
+			//If match set first byte of name to zero	
+			bufferDirectory[k-getNameLength]= '0';
 
 		}
 		i += 32;

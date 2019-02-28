@@ -52,7 +52,7 @@ void main()
 	printLogo();
 
 	/* Step 1 – load/edit/print file */
-	//interrupt(33,3,"spc03\0",buffer,&size);
+	interrupt(33,3,"spc03\0",buffer,&size);
 	buffer[7] = '2'; buffer[8] = '0';
 	buffer[9] = '1'; buffer[10] = '9';
 	interrupt(33,0,buffer,0,0);

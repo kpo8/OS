@@ -52,14 +52,14 @@ void main()
 	printLogo();
 
 	/* Step 1 – load/edit/print file */
-//	interrupt(33,3,"spc03\0",buffer,&size);
-//	buffer[7] = '2'; buffer[8] = '0';
-//	buffer[9] = '1'; buffer[10] = '9';
-//	interrupt(33,0,buffer,0,0);
-	//interrupt(33,0,"\r\n\0",0,0);
+	//interrupt(33,3,"spc03\0",buffer,&size);
+	buffer[7] = '2'; buffer[8] = '0';
+	buffer[9] = '1'; buffer[10] = '9';
+	interrupt(33,0,buffer,0,0);
+	interrupt(33,0,"\r\n\0",0,0);
 
 	/* Step 2 – write revised file */
-//	interrupt(33,8,"sp19\0",buffer,size);
+	interrupt(33,8,"sp19\0",buffer,size);
 	
 	/* Step 3 – delete original file */
 	interrupt(33,7,"spc03\0",0,0);
@@ -73,7 +73,9 @@ void deleteFile(char* name)
 	int i =0;
 	int k = 0;
 	int q =0;
+	int holder=0;
 	int getNameLength =0;
+	int numberArray[24];
 	char bufferDirectory[512];
 	char bufferMap[512];
 
@@ -106,6 +108,22 @@ void deleteFile(char* name)
 			//If match set first byte of name to zero	
 			bufferDirectory[i]= '0';
 			interrupt(33,6,bufferDirectory,257,0);
+			
+			i=i+8;
+				
+			// Finds  sectors from the map
+			while(q<512)
+			{
+				//overwrites if true
+				if(bufferDirectory[i] == q)
+				{
+					bufferMap[q] = 0;
+					++i;
+				}
+				++q;
+			}
+			
+			interrupt(33,6,bufferMap,256,0);
 			break;
 
 		}

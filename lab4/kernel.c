@@ -258,6 +258,7 @@ void readFile(char* fname, char* buffer, int* size)
 	/*257 is where the directory is*/
 	int i =0;
 	int k = 0;
+	int getNameLength=0;
 	int q =0;
 	char bufferDirectory[512];
 	interrupt(33,2,bufferDirectory,257,0);

@@ -53,9 +53,18 @@ void main()
 	while (1) ;
 }
 
+void stop() 
+{ 
+	while (1) ; 
+} 
+
 void runProgram(char* name, int segment)
 {
+	char buffer[512];
+	int size = 0;
+	
 
+	readFile(name, &buffer, &size);
 }
 
 void deleteFile(char* name) 
@@ -524,6 +533,8 @@ void handleInterrupt21(int ax, int bx, int cx, int dx)
 			break;
 		case 4:
 			runProgram(bx,cx);
+		case 4:
+			stop();
 		case 6:
 			writeSector(bx,cx);
 			break;

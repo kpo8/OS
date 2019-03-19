@@ -23,7 +23,7 @@
 /*                                                                        */
 /*                                                                        */
 /* 3460:4/526 BlackDOS2020 kernel, Version 1.01, Spring 2018.             */
-
+void stop();
 void handleInterrupt21(int,int,int,int);
 void readSector(char*,int);
 void writeSector(char*,int);
@@ -48,24 +48,36 @@ void main()
 	interrupt(33,2,buffer,258,0);
 	interrupt(33,12,buffer[0]+1,buffer[1]+1,0);
 	printLogo();
-	interrupt(33,4,"kitty1\0",2,0);
+	interrupt(33,4,"fib\0",2,0);
 	interrupt(33,0,"Error if this executes.\r\n\0",0,0);
 	while (1) ;
+}
+
+void runProgram(char* name, int segment)
+{
+	char buffer[12288];
+	int size = 0;
+	int q  = 0;
+	int baseAddress = segment * 0x1000;
+
+	// reads file into local buffer
+	readFile(name, buffer, &size);
+
+	// loads local buffer into memory
+	while(q < 12288)
+	{
+		putInMemory(baseAddress, q, buffer[q]);
+		++q;
+	}
+
+	launchProgram(baseAddress);
+
 }
 
 void stop() 
 { 
 	while (1) ; 
 } 
-
-void runProgram(char* name, int segment)
-{
-	char buffer[512];
-	int size = 0;
-	
-
-	readFile(name, &buffer, &size);
-}
 
 void deleteFile(char* name) 
 {
@@ -316,25 +328,29 @@ void readFile(char* fname, char* buffer, int* size)
 	}
 }	
 
+
 void error(int bx)
 {
 	switch(bx)
 	{
 		case 0:
 			interrupt(33,0,"File not found",0,0);
+			stop();
 			break;
 		case 1:
 			interrupt(33,0,"Bad file name.",0,0);
+			stop();
 			break;
 		case 2:
 			interrupt(33,0,"Disk full",0,0);
+			stop();
 			break;
 		default:
 			interrupt(33,0,"General error",0,0);
+			stop();
 			break;
 	}
 }
-
 
 void readInt(int* n)
 {
@@ -533,7 +549,7 @@ void handleInterrupt21(int ax, int bx, int cx, int dx)
 			break;
 		case 4:
 			runProgram(bx,cx);
-		case 4:
+		case 5:
 			stop();
 		case 6:
 			writeSector(bx,cx);

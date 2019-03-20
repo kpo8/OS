@@ -18,12 +18,18 @@ as86 kernel.asm -o kasm.o
 bcc -ansi -c -o kernel.o kernel.c
 #link kernal.o to kernel.asm
 ld86 -o kernel -d kernel.o kasm.o
+
+bcc -ansi -c -o fib.o fib.c
+as86 blackdos.asm -o bdos_asm.o
+ld86 -o fib -d fib.o bdos_asm.o
+
 #copy kernel to image
 dd if=kernel of=floppya.img bs=512 conv=notrunc seek=259
 
 
 #This maybe lab4 specific but it cannot hurt having it in here
 gcc loadFile.c -o loadfile
+./loadfile fib
 
 #echo "tarring lab"
 #cd ..

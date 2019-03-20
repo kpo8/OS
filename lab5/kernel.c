@@ -461,9 +461,10 @@ void readString(char* input)
 		}
 	}
 	//prints out a new line, and then the string from the user
-	printString("\r\n\0",0);
+	// print is unnecessary during read
+/*	printString("\r\n\0",0);
 	printString(input,0);
-	printString("\r\n\0",0);
+	printString("\r\n\0",0); */
 }
 
 void printLogo()

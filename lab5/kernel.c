@@ -40,6 +40,7 @@ void readFile(char* fname, char* buffer, int* size);
 void writeFile(char* name, char* buffer, int numberOfSectors);
 void deleteFile(char* name);
 void runProgram(char* name, int segment);
+void reverse(char s[], int stringLength);
 
 void main()
 {
@@ -352,6 +353,18 @@ void error(int bx)
 	}
 }
 
+void reverse(char s[], int stringLength)
+{
+	int i, j;
+	char c;
+ 
+	for (i = 0, j = stringLength-1; i<j; i++, j--)
+	{
+		c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
+}
 void readInt(int* n)
 {
 	int pos;
@@ -365,19 +378,25 @@ void readInt(int* n)
 	}
 }
 
-void writeInt(int x)
+void writeInt(int n)
 {
-	char intToConvertStr[6];
-	int pos = 3;
-	intToConvertStr[pos] = '\0';
-	--pos;
-	while(x != 0)
+	char intToStr[6];
+	int i;
+	int stringLength=0;
+	
+	i = 0;
+	do 
+	{ 
+        	intToStr[i++] = mod(n,10) + '0';
+	} while ((n /= 10) > 0);
+	
+	intToStr[i] = '\0';
+	while(intToStr[stringLength] != '\0')
 	{
-		intToConvertStr[pos] = (mod(x, 10) + '0');
-		x = div(x, 10);
-		--pos;	
+		++stringLength;
 	}
-	interrupt(33,0, intToConvertStr,1,0);
+	reverse(intToStr, stringLength);
+	interrupt(33,0,intToStr,0,0);
 }
 
 int mod(int a, int b) 

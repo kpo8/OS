@@ -24,18 +24,18 @@ typedef struct
 
 static menuChoices options[]=
 {	
-	{ "BOOT", BOOT },
-	{ "CLRS", CLRS },
-	{ "COPY", COPY },
-	{ "DDIR", DDIR },
-	{ "ECHO", ECHO },
-	{ "EXEC", EXEC },
-	{ "HELP", HELP },
-	{ "PRNT", PRNT },
-	{ "REMV", REMV },
-	{ "SENV", SENV },
-	{ "SHOW", SHOW },
-	{ "TWET", TWET }
+	{ "boot", BOOT },
+	{ "clrs", CLRS },
+	{ "copy", COPY },
+	{ "ddir", DDIR },
+	{ "echo", ECHO },
+	{ "exec", EXEC },
+	{ "help", HELP },
+	{ "prnt", PRNT },
+	{ "remv", REMV },
+	{ "senv", SENV },
+	{ "show", SHOW },
+	{ "twet", TWET }
 };
 
 void terminalCommands(char *s);
@@ -44,11 +44,12 @@ int stringCompare(char one[], char two[]);
 
 void main()
 {	
-	/*char* n;
-	PRINTS("~_~: \0");
-	terminalCommands(SCANS(n));
-	END;
-	*/
+	while(1)
+	{
+		char* n;
+		PRINTS("~_~: \0");
+		terminalCommands(SCANS(n));
+	}	
 }
 
 int stringCompare(char *one, char *two)
@@ -91,7 +92,7 @@ int getOption(char *s)
 		}
 	}	
 	
-	if(trueOrFalse != -1)
+	if(trueOrFalse != 0)
 	{
 		return BADOPTION;
 	}	
@@ -99,6 +100,8 @@ int getOption(char *s)
 
 void terminalCommands(char *s)
 {
+	PRINTS("\n\r\0");
+
 	switch (getOption(s)) 
 	{
 		case BOOT:
@@ -128,7 +131,7 @@ void terminalCommands(char *s)
 		case TWET: 
 			break;
 		case BADOPTION:
-			PRINTS("BAD OPTION \0\n");
+			PRINTS("BAD OPTION \n\r\0");
 			break;
 	}
 }

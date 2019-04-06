@@ -1,5 +1,6 @@
 #include "blackdos.h"
 
+#define BADOPTION -1
 #define BOOT 0
 #define CLRS 1
 #define COPY 2
@@ -12,32 +13,34 @@
 #define SENV 9
 #define SHOW 10
 #define TWET 11
+#define MAXOPTIONS 11
 
-struct menuChoices
+typedef struct 
 {
-	char *key; 
+	char *inputString; 
 	int val; 
-};
+} menuChoices;
 
-static menuChoices options[] =
+
+static menuChoices options[]=
 {	
-	{ "BOOT", A1 },
-	{ "CLRS", A1 },
-	{ "COPY", A1 },
-	{ "DDIR", A1 },
-	{ "ECHO", A1 },
-	{ "EXEC", A1 },
-	{ "HELP", A1 },
-	{ "PRNT", A1 },
-	{ "REMV", A1 },
-	{ "SENV", A1 },
-	{ "SHOW", A1 },
-	{ "TWET", A1 }
+	{ "BOOT", BOOT },
+	{ "CLRS", CLRS },
+	{ "COPY", COPY },
+	{ "DDIR", DDIR },
+	{ "ECHO", ECHO },
+	{ "EXEC", EXEC },
+	{ "HELP", HELP },
+	{ "PRNT", PRNT },
+	{ "REMV", REMV },
+	{ "SENV", SENV },
+	{ "SHOW", SHOW },
+	{ "TWET", TWET }
 };
 
 void terminalCommands(char *s);
 int getOption(char *key);
-void stringCompare(char one[], char two[]);
+int stringCompare(char one[], char two[]);
 
 void main()
 {	
@@ -48,15 +51,50 @@ void main()
 	*/
 }
 
-int stringCompare(char one[], char two[])
+int stringCompare(char *one, char *two)
 {
-	//https://code.woboq.org/userspace/glibc/string/strcmp.c.html
+	char *string1;
+	char *string2;
+	char compare1;
+	char compare2;
+		
+	*string1 = *one;
+	*string2 = *two;
+
+	do
+	{
+		compare1 = *string1++;
+		compare2 = *string2++;
+		if(compare1 == '\0')
+		{
+			return compare1 -compare2;
+		}
+	}
+	while(compare1 == compare2);
+
+	return compare1 - compare2; 
 }	
 
+//goes through possible options
 int getOption(char *s)
 {
-	//need to make
-	// a string compare function
+	int i = 0;
+	int trueOrFalse = -1;
+
+	for(i =0; i < MAXOPTIONS; ++i)
+	{
+		int truOrFalse = stringCompare(options[i].inputString, s);
+		
+		if(trueOrFalse == 0)
+		{
+			return options[i].val;
+		}
+	}	
+	
+	if(trueOrFalse != -1)
+	{
+		return BADOPTION;
+	}	
 }
 
 void terminalCommands(char *s)
@@ -89,7 +127,8 @@ void terminalCommands(char *s)
 			break;
 		case TWET: 
 			break;
-		default:
-			PRINTS("BAD OPTION" \0\n);
+		case BADOPTION:
+			PRINTS("BAD OPTION \0\n");
+			break;
 	}
 }

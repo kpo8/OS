@@ -40,7 +40,7 @@ static menuChoices options[]=
 
 void terminalCommands(char *s);
 int getOption(char *key);
-int stringCompare(char one[], char two[]);
+int stringCompare(char one[10], char two[10]);
 
 void main()
 {	
@@ -48,54 +48,50 @@ void main()
 	{
 		char* n;
 		PRINTS("~_~: \0");
-		terminalCommands(SCANS(n));
+		SCANS(n);
+		terminalCommands(n);
 	}	
 }
 
-int stringCompare(char *one, char *two)
+int stringCompare(char one[10], char two[10])
 {
-	char *string1;
-	char *string2;
-	char compare1;
-	char compare2;
-		
-	*string1 = *one;
-	*string2 = *two;
+	int c = 0;
+        
+        while (one[c] == two[c])
+        {
+                if (one[c] == '\0' || two[c] == '\0')
+                {
+                         break;
+                }
+                c++;
+        }
 
-	do
-	{
-		compare1 = *string1++;
-		compare2 = *string2++;
-		if(compare1 == '\0')
-		{
-			return compare1 -compare2;
-		}
-	}
-	while(compare1 == compare2);
+        if (one[c] == '\0' && two[c] == '\0')
+        {
+                return 0;
+        }
 
-	return compare1 - compare2; 
+        else
+        {
+                return -1;
+        }
 }	
 
 //goes through possible options
 int getOption(char *s)
 {
 	int i = 0;
-	int trueOrFalse = -1;
+        int trueOrFalse = -1;
 
-	for(i =0; i < MAXOPTIONS; ++i)
-	{
-		int truOrFalse = stringCompare(options[i].inputString, s);
-		
-		if(trueOrFalse == 0)
-		{
-			return options[i].val;
-		}
-	}	
-	
-	if(trueOrFalse != 0)
-	{
-		return BADOPTION;
-	}	
+        for(i =0; i < MAXOPTIONS; ++i)
+        {
+                if(stringCompare(options[i].inputString, s) == 0)
+                {
+                        return options[i].val;
+                }
+        }
+
+        return BADOPTION;
 }
 
 void terminalCommands(char *s)

@@ -42,12 +42,13 @@ void terminalCommands(char *s);
 int getOption(char *key);
 int stringCompare(char one[10], char two[10]);
 
+//global buffer 
+char buffer[12288];
+
 void main()
 {
 	//load configuration files
-	char buffer[12288];
 	interrupt(33,2,buffer,258,0);
-	interrupt(33,12,buffer[0]+1,buffer[1]+1,0);	
 
 	while(1)
 	{

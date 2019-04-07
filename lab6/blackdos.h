@@ -6,5 +6,5 @@
 #define SCANN(x)   interrupt(33,14,&x,0,0)
 #define END        interrupt(33,5,0,0,0)
 #define BOOT       interrupt(33,11,0,0,0)
-#define CLRS       interrupt(33,12,0,0,0)
+#define CLRS       interrupt(33,12,buffer[0]+1,buffer[1]+1,0)
 #define COPY       

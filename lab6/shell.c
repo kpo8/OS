@@ -1,18 +1,18 @@
 #include "blackdos.h"
 
 #define BADOPTION -1
-#define BOOT 0
-#define CLRS 1
-#define COPY 2
-#define DDIR 3
-#define ECHO 4
-#define EXEC 5
-#define HELP 6
-#define PRNT 7
-#define REMV 8
-#define SENV 9
-#define SHOW 10
-#define TWET 11
+#define BOOT0 0
+#define CLRS1 1
+#define COPY2 2
+#define DDIR3 3
+#define ECHO4 4
+#define EXEC5 5
+#define HELP6 6
+#define PRNT7 7
+#define REMV8 8
+#define SENV9 9
+#define SHOW10 10
+#define TWET11 11
 #define MAXOPTIONS 11
 
 typedef struct 
@@ -24,18 +24,18 @@ typedef struct
 
 static menuChoices options[]=
 {	
-	{ "boot", BOOT },
-	{ "clrs", CLRS },
-	{ "copy", COPY },
-	{ "ddir", DDIR },
-	{ "echo", ECHO },
-	{ "exec", EXEC },
-	{ "help", HELP },
-	{ "prnt", PRNT },
-	{ "remv", REMV },
-	{ "senv", SENV },
-	{ "show", SHOW },
-	{ "twet", TWET }
+	{ "boot", BOOT0 },
+	{ "clrs", CLRS1 },
+	{ "copy", COPY2 },
+	{ "ddir", DDIR3 },
+	{ "echo", ECHO4 },
+	{ "exec", EXEC5 },
+	{ "help", HELP6 },
+	{ "prnt", PRNT7 },
+	{ "remv", REMV8 },
+	{ "senv", SENV9 },
+	{ "show", SHOW10 },
+	{ "twet", TWET11 }
 };
 
 void terminalCommands(char *s);
@@ -43,7 +43,12 @@ int getOption(char *key);
 int stringCompare(char one[10], char two[10]);
 
 void main()
-{	
+{
+	//load configuration files
+	char buffer[12288];
+	interrupt(33,2,buffer,258,0);
+	interrupt(33,12,buffer[0]+1,buffer[1]+1,0);	
+
 	while(1)
 	{
 		char* n;
@@ -81,8 +86,7 @@ int stringCompare(char one[10], char two[10])
 int getOption(char *s)
 {
 	int i = 0;
-        int trueOrFalse = -1;
-
+       
         for(i =0; i < MAXOPTIONS; ++i)
         {
                 if(stringCompare(options[i].inputString, s) == 0)
@@ -100,31 +104,31 @@ void terminalCommands(char *s)
 
 	switch (getOption(s)) 
 	{
-		case BOOT:
-		       // put the interrupt stuff here. below is just a test if you get this message above it works	
-			PRINTS("THIS WORKS \0");
+		case BOOT0:
+		     	BOOT;  			
 			break;
-		case CLRS: 
+		case CLRS1:
+			CLRS;	
 			break;
-		case COPY:
+		case COPY2:
 		       	break;
-		case DDIR: 
+		case DDIR3: 
 			break;
-		case ECHO: 
+		case ECHO4: 
 			break;
-		case EXEC: 
+		case EXEC5: 
 			break;
-		case HELP: 
+		case HELP6: 
 			break;
-		case PRNT: 
+		case PRNT7: 
 			break;
-		case REMV: 
+		case REMV8: 
 			break;
-		case SENV: 
+		case SENV9: 
 			break;
-		case SHOW: 
+		case SHOW10: 
 			break;
-		case TWET: 
+		case TWET11: 
 			break;
 		case BADOPTION:
 			PRINTS("BAD OPTION \n\r\0");

@@ -7,7 +7,7 @@
 #define END        interrupt(33,5,0,0,0)
 #define BOOT       interrupt(33,11,0,0,0)
 #define CLRS       interrupt(33,12,buffer[0]+1,buffer[1]+1,0)
-#define COPY(x,y)  interrupt(33,3,"x\0",buffer,&size); interrupt(33,8,"y\0",buffer,size);
+//#define COPY(x,y)  interrupt(33,3,"x\0",buffer,&size); interrupt(33,8,"y\0",buffer,size);
 #define ECHO(x)    PRINTS(x); interrupt(33,0,"\n",0,0)
 #define HELP    {\
 			interrupt(33,0,"boot reboots OS\r\n\0",0,0);\

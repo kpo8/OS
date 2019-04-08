@@ -38,13 +38,31 @@ static menuChoices options[]=
 	{ "twet", TWET11 }
 };
 
+       /*
+	clrs clears screan \
+	copy -arg1 -ar2 \
+	      copys file \
+	ddir displays disk directory \
+	echo displays comment \	
+	exec starts program \
+	help displays this message \
+	prnt -arg1\
+	      prints file contents \
+	remv -arg1 \
+	      deletes file \
+	senv  set environment variables; load and execute Stenv at segment 4 \
+	show -arg1 \
+	      displays file contents \
+	twet -arg1 \
+	      creates and saves text file, saves to filenamen";
+*/
 void terminalCommands(char *s);
 int getOption(char *key);
 int stringCompare(char one[10], char two[10]);
 
 //global buffer 
 char buffer[12288];
-
+int size;
 void main()
 {
 	//load configuration files
@@ -101,8 +119,10 @@ int getOption(char *s)
 
 void terminalCommands(char *s)
 {
+	char *argument1;
+	char *argument2;
+	
 	PRINTS("\n\r\0");
-
 	switch (getOption(s)) 
 	{
 		case BOOT0:
@@ -111,15 +131,24 @@ void terminalCommands(char *s)
 		case CLRS1:
 			CLRS;	
 			break;
-		case COPY2:
+		case COPY2: //This I am stuck on
+		//	SCANS(argument1);
+		//	SCANS(argument2);
+		//	COPY(argument1,argument2);
 		       	break;
-		case DDIR3: 
+		case DDIR3: //Needs done
 			break;
 		case ECHO4: 
+			SCANS(argument1);
+			while(*argument1 == '\0')
+			{
+				ECHO(argument1);
+			}
 			break;
 		case EXEC5: 
 			break;
-		case HELP6: 
+		case HELP6:
+		       HELP;	
 			break;
 		case PRNT7: 
 			break;

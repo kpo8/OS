@@ -38,31 +38,15 @@ static menuChoices options[]=
 	{ "twet", TWET11 }
 };
 
-       /*
-	clrs clears screan \
-	copy -arg1 -ar2 \
-	      copys file \
-	ddir displays disk directory \
-	echo displays comment \	
-	exec starts program \
-	help displays this message \
-	prnt -arg1\
-	      prints file contents \
-	remv -arg1 \
-	      deletes file \
-	senv  set environment variables; load and execute Stenv at segment 4 \
-	show -arg1 \
-	      displays file contents \
-	twet -arg1 \
-	      creates and saves text file, saves to filenamen";
-*/
 void terminalCommands(char *s);
 int getOption(char *key);
 int stringCompare(char one[10], char two[10]);
+void forCopy(char* s);
+void getCommand(char* s, char* command);
 
 //global buffer 
 char buffer[12288];
-int size;
+
 void main()
 {
 	//load configuration files
@@ -71,7 +55,7 @@ void main()
 	while(1)
 	{
 		char* n;
-		PRINTS("~_~: \0");
+		PRINTS("^(~(oo)~)^ \0");
 		SCANS(n);
 		terminalCommands(n);
 	}	
@@ -105,10 +89,14 @@ int stringCompare(char one[10], char two[10])
 int getOption(char *s)
 {
 	int i = 0;
-       
+
+       	char command[5];
+       	command[4] = '\0';
+       	getCommand(s,command);
+
         for(i =0; i < MAXOPTIONS; ++i)
         {
-                if(stringCompare(options[i].inputString, s) == 0)
+                if(stringCompare(options[i].inputString, command) == 0)
                 {
                         return options[i].val;
                 }
@@ -119,10 +107,8 @@ int getOption(char *s)
 
 void terminalCommands(char *s)
 {
-	char *argument1;
-	char *argument2;
-	
 	PRINTS("\n\r\0");
+
 	switch (getOption(s)) 
 	{
 		case BOOT0:
@@ -131,24 +117,16 @@ void terminalCommands(char *s)
 		case CLRS1:
 			CLRS;	
 			break;
-		case COPY2: //This I am stuck on
-		//	SCANS(argument1);
-		//	SCANS(argument2);
-		//	COPY(argument1,argument2);
-		       	break;
-		case DDIR3: //Needs done
+		case COPY2:
+			forCopy(s);
+		    break;
+		case DDIR3: 
 			break;
 		case ECHO4: 
-			SCANS(argument1);
-			while(*argument1 == '\0')
-			{
-				ECHO(argument1);
-			}
 			break;
 		case EXEC5: 
 			break;
-		case HELP6:
-		       HELP;	
+		case HELP6: 
 			break;
 		case PRNT7: 
 			break;
@@ -163,5 +141,47 @@ void terminalCommands(char *s)
 		case BADOPTION:
 			PRINTS("BAD OPTION \n\r\0");
 			break;
+	}
+}
+
+void forCopy(char* s)
+{
+	char file1[15];
+	char file2[15];
+	int sLen = sizeof(*s)/sizeof(char);  // number of elements in s
+
+	int i = 5;   // ignores "copy "
+	int a = 0;
+	for (i; i<sLen; ++i)  // set file1 name
+	{
+		if (i==' ')
+		{
+			file1[i]='\0';
+			break;
+		}
+		file1[i]=s[i];
+	}
+
+	for (i=i+1; i<sLen; ++i)  // set file2 name
+	{
+		if (i=='\0')
+		{
+			file2[a]='\0';
+			break;
+		}
+		file2[a]=s[i];
+		++a;
+	}
+
+	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
+	interrupt(33,8,file2,buffer,size);
+}
+
+void getCommand(char* s, char* command)
+{
+	int i = 0;
+	for (i=0; i<4; ++i)
+	{
+		command[i]=s[i];
 	}
 }

@@ -21,7 +21,7 @@
 			interrupt(33,0,"remv -arg1\r\n\0",0,0);\
 			interrupt(33,0,"deletes file\r\n\0",0,0);\
 			interrupt(33,0,"clrs clears screen\r\n\0",0,0);\
-			interrupt(33,0,"senv  set environment variables; load and execute Stenv at segment 4 \r\n\0",0,0);\
+			interrupt(33,0,"senv  set environment variables; load and execute Stenv at segment 4\r\n\0",0,0);\
 			interrupt(33,0,"show -arg1 \r\n\0",0,0);\
 			interrupt(33,0,"displays file contents\r\n\0",0,0);\
 			interrupt(33,0,"twet -arg1\r\n\0",0,0);\

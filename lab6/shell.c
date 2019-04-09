@@ -177,14 +177,13 @@ void forCopy(char* s)
 		}
 		
 		file2[a]=s[i];
-		PRINTN(i);
 		++i;
 		++a;
 	}
 	file2[a]='\0';
 
-//	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
-//	interrupt(33,8,file2,buffer,size);
+	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
+	interrupt(33,8,file2,buffer,size);
 }
 
 void getCommand(char* s, char* command)

@@ -43,6 +43,8 @@ int getOption(char *key);
 int stringCompare(char one[10], char two[10]);
 void forCopy(char* s);
 void getCommand(char* s, char* command);
+void arg1(char* s);
+
 
 //global buffer 
 char buffer[12288];
@@ -122,11 +124,13 @@ void terminalCommands(char *s)
 			break;
 		case DDIR3: 
 			break;
-		case ECHO4: 
+		case ECHO4:
+			arg1(s);
 			break;
 		case EXEC5: 
 			break;
-		case HELP6: 
+		case HELP6:
+			HELP;	
 			break;
 		case PRNT7: 
 			break;
@@ -144,6 +148,34 @@ void terminalCommands(char *s)
 	}
 }
 
+void arg1(char* s)
+{
+	char file1[15];
+	char file2[15];
+	int size =0;
+	int i=5;   // ignores copy 
+	int a = 0;
+
+	while(s[i] != '\0')  // set file1 name
+	{
+		if (s[i] == '\0')
+		{
+			break;
+		}
+		if(s[i] != '\0')
+		{
+			file1[a] = s[i];
+		}
+		++i;
+		++a;
+	}
+
+	file1[a]='\0';
+	PRINTS(file1);
+	PRINTS("\n\r\0");	
+}
+
+
 void forCopy(char* s)
 {
 	char file1[15];
@@ -158,7 +190,7 @@ void forCopy(char* s)
 		{
 			break;
 		}
-		if(s[i] != '\0')
+		if(s[i] != ' ')
 		{
 			file1[a] = s[i];
 		}

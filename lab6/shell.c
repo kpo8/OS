@@ -44,23 +44,17 @@ int stringCompare(char one[10], char two[10]);
 void forCopy(char* s);
 void getCommand(char* s, char* command);
 void arg1(char* s);
-
+void listFiles();
 
 //global buffer 
 char buffer[12288];
 
 void main()
 {
-//	int size =0;
+
 	//load configuration files
-/* 	interrupt(33,2,buffer,258,0);
+ 	interrupt(33,2,buffer,258,0);
 
-
-	interrupt(33,3,"test\0",buffer,&size);
-	buffer[7] = '2'; buffer[8] = '0';
-	buffer[9] = '1'; buffer[10] = '9';
-	interrupt(33,0,buffer,1,0);
-*/	
 	while(1)
 	{
 		char* n;
@@ -68,6 +62,41 @@ void main()
 		SCANS(n);
 		terminalCommands(n);
 	}
+}
+//DDIR funciton
+void listFiles()
+{
+	// 257 is where the directory is
+        int i =0;
+        int k = 0;
+        int getNameLength=0;
+        int q =0;
+	char dummy[16];
+        char bufferDirectory[512];
+        interrupt(33,2,bufferDirectory,257,0);
+       // Goes through all 16 files in directory
+        while(i < 512)
+        {
+                // lists files 
+           	while(bufferDirectory[i+k] != '\0')
+                {
+			dummy[k] = bufferDirectory[i+k];
+			++k;
+                }
+		dummy[k]= '\0';
+		if(dummy[0] != '\0')
+		{
+			PRINTS(dummy);
+			PRINTS("\n\r\0");
+		}
+		k =0;
+		while(dummy[k] != ' ')
+		{
+			dummy[k] =' ';
+		}	
+	        k=0;	
+                i += 32;
+        }
 }
 
 int stringCompare(char one[10], char two[10])
@@ -129,7 +158,9 @@ void terminalCommands(char *s)
 		case COPY2:
 			forCopy(s);
 			break;
-		case DDIR3: 
+		case DDIR3:
+		        listFiles();
+			PRINTS("\n\r\0");	
 			break;
 		case ECHO4:
 			arg1(s);

@@ -48,6 +48,7 @@ void arg1(char* s);
 
 //global buffer 
 char buffer[12288];
+char argv[15];
 
 void main()
 {
@@ -126,6 +127,8 @@ void terminalCommands(char *s)
 			break;
 		case ECHO4:
 			arg1(s);
+			PRINTS(argv);
+			PRINTS("\n\r\0");
 			break;
 		case EXEC5: 
 			break;
@@ -148,13 +151,21 @@ void terminalCommands(char *s)
 	}
 }
 
-void arg1(char* s)
+void arg1(char *s)
 {
 	char file1[15];
 	char file2[15];
 	int size =0;
 	int i=5;   // ignores copy 
 	int a = 0;
+	
+	if(s[4] == '\0')
+	{
+		PRINTS("Please enter an argument \n\r\0");
+		SCANS(s);
+		PRINTS("\n\r\0");
+		arg1(s);
+	}
 
 	while(s[i] != '\0')  // set file1 name
 	{
@@ -171,8 +182,12 @@ void arg1(char* s)
 	}
 
 	file1[a]='\0';
-	PRINTS(file1);
-	PRINTS("\n\r\0");	
+	a = 0;
+	while(file1[a] != '\0')
+	{
+		argv[a] = file1[a];
+		++a;
+	}
 }
 
 

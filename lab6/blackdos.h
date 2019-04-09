@@ -44,3 +44,9 @@
 			buffer[9] = '1'; buffer[10] = '9';\
 			interrupt(33,0,buffer,1,0);\
 }
+#define TWET(x) {\
+			int size=0;\
+			char n[140];\
+			interrupt(33,8,x,n,size);\
+}
+#define REMV(x)         interrupt(33,7,x,0,0)

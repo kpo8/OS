@@ -13,7 +13,7 @@
 #define SENV9 9
 #define SHOW10 10
 #define TWET11 11
-#define MAXOPTIONS 11
+#define MAXOPTIONS 12
 
 typedef struct 
 {
@@ -147,15 +147,21 @@ void terminalCommands(char *s)
 		        arg1(s);
 			PRNT(s);	
 			break;
-		case REMV8: 
+		case REMV8:
+		        arg1(s);
+			REMV(s);	
 			break;
 		case SENV9: 
 			break;
 		case SHOW10:
 		        arg1(s);
+			PRINTS(s);
 			SHOW(s);
 			break;
-		case TWET11: 
+		case TWET11:
+	//	       	PRINTS("ENTER TEXT\r\n\0");
+//			arg1(s);
+//			TWET(s);
 			break;
 		case BADOPTION:
 			PRINTS("BAD OPTION \n\r\0");
@@ -165,8 +171,7 @@ void terminalCommands(char *s)
 
 void arg1(char *s)
 {
-	char file1[15];
-	char file2[15];
+	char file1[20];
 	int size =0;
 	int i=5;   // ignores copy 
 	int a = 0;

@@ -55,7 +55,7 @@ void main()
 	while(1)
 	{
 		char* n;
-		PRINTS("^(~(oo)~)^ \0");
+		PRINTS("^(~(oo)~)^: \0");
 		SCANS(n);
 		terminalCommands(n);
 	}	
@@ -119,7 +119,7 @@ void terminalCommands(char *s)
 			break;
 		case COPY2:
 			forCopy(s);
-		    break;
+			break;
 		case DDIR3: 
 			break;
 		case ECHO4: 
@@ -148,33 +148,43 @@ void forCopy(char* s)
 {
 	char file1[15];
 	char file2[15];
-	int sLen = sizeof(*s)/sizeof(char);  // number of elements in s
-
-	int i = 5;   // ignores "copy "
+	int size =0;
+	int i=5;   // ignores copy 
 	int a = 0;
-	for (i; i<sLen; ++i)  // set file1 name
-	{
-		if (i==' ')
-		{
-			file1[i]='\0';
-			break;
-		}
-		file1[i]=s[i];
-	}
 
-	for (i=i+1; i<sLen; ++i)  // set file2 name
+	while(s[i] != ' ')  // set file1 name
 	{
-		if (i=='\0')
+		if (s[i] == ' ')
 		{
-			file2[a]='\0';
 			break;
 		}
-		file2[a]=s[i];
+		if(s[i] != '\0')
+		{
+			file1[a] = s[i];
+		}
+		++i;
 		++a;
 	}
 
-	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
-	interrupt(33,8,file2,buffer,size);
+	file1[a]='\0';
+
+	a=0;
+	while(s[i] != '\0')  // set file2 name
+	{
+		if (s[i]=='\0')
+		{
+			break;
+		}
+		
+		file2[a]=s[i];
+		PRINTN(i);
+		++i;
+		++a;
+	}
+	file2[a]='\0';
+
+//	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
+//	interrupt(33,8,file2,buffer,size);
 }
 
 void getCommand(char* s, char* command)

@@ -34,6 +34,14 @@ gcc loadFile.c -o loadfile
 bcc -ansi -c -o shell.o shell.c
 ld86 -o shell -d shell.o bdos_asm.o
 
+echo "loading fib exec"
+./loadfile fib
+
+echo "loading test exec"
+./loadfile test
+echo "loading Stenv"
+./loadfile Stenv
+
 #load shell to kernel
 echo "loading shell"
 ./loadfile shell

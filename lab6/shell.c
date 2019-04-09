@@ -70,7 +70,9 @@ void listFiles()
         int i =0;
         int k = 0;
         int getNameLength=0;
-        int q =0;
+        int q =8;
+	int fileSize=0;
+	int totalSize=0;
 	char dummy[16];
         char bufferDirectory[512];
         interrupt(33,2,bufferDirectory,257,0);
@@ -83,20 +85,45 @@ void listFiles()
 			dummy[k] = bufferDirectory[i+k];
 			++k;
                 }
-		dummy[k]= '\0';
+		dummy[k] = '\0';		
+     		//lists sizes        
+     		while(q < 24)
+		{
+			int currentSector = bufferDirectory[i + 8 + q];
+
+			// Read each sector into buffer
+			if(currentSector == 0)
+			{
+				// Updates the amounts of sectors requried by file
+				fileSize = q;
+				break;
+			}
+		
+			++q;                            
+		}
+
+		totalSize = fileSize + totalSize;	
+		
 		if(dummy[0] != '\0')
 		{
 			PRINTS(dummy);
+			PRINTS(" \0");
+			PRINTN(fileSize);
 			PRINTS("\n\r\0");
 		}
+
+		//cleans up
 		k =0;
-		while(dummy[k] != ' ')
-		{
-			dummy[k] =' ';
-		}	
-	        k=0;	
-                i += 32;
+		q =0;
+		fileSize =0;
+	        i += 32;
         }
+	PRINTS("DISK USAGE: ");
+	PRINTN(totalSize);
+	PRINTS("\n\r\0");
+	PRINTS("FREE SPACE: ");
+	PRINTN(256-totalSize);
+	PRINTS("\n\r\0");
 }
 
 int stringCompare(char one[10], char two[10])

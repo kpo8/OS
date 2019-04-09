@@ -152,10 +152,10 @@ void terminalCommands(char *s)
 			REMV(s);	
 			break;
 		case SENV9: 
+			SENV;
 			break;
 		case SHOW10:
 		        arg1(s);
-			PRINTS(s);
 			SHOW(s);
 			break;
 		case TWET11:

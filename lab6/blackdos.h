@@ -50,3 +50,4 @@
 			interrupt(33,8,x,n,size);\
 }
 #define REMV(x)         interrupt(33,7,x,0,0)
+#define SENV            EXEC("Stenv\0") 

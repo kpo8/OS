@@ -7,8 +7,10 @@
 #define END        interrupt(33,5,0,0,0)
 #define BOOT       interrupt(33,11,0,0,0)
 #define CLRS       interrupt(33,12,buffer[0]+1,buffer[1]+1,0)
-//#define COPY(x,y)  interrupt(33,3,"x\0",buffer,&size); interrupt(33,8,"y\0",buffer,size);
-#define ECHO(x)    PRINTS(x); interrupt(33,0,"\n",0,0)
+#define EXEC(x)    {\
+			interrupt(33,4,x,2,0);\
+			interrupt(33,5,0,0,0);\
+		   }
 #define HELP    {\
 			interrupt(33,0,"boot reboots OS\r\n\0",0,0);\
 			interrupt(33,0,"clrs clears screen\r\n\0",0,0);\
@@ -26,4 +28,19 @@
 			interrupt(33,0,"displays file contents\r\n\0",0,0);\
 			interrupt(33,0,"twet -arg1\r\n\0",0,0);\
 			interrupt(33,0,"creates and saves text file, save to filename\r\n\0",0,0);\
+}
+#define SHOW(x) {\
+			int size=0;\
+			interrupt(33,3,x,buffer,&size);\
+			buffer[7] = '2'; buffer[8] = '0';\
+			buffer[9] = '1'; buffer[10] = '9';\
+			interrupt(33,0,buffer,0,0);\
+			interrupt(33,0,"\r\n\0",0,0);\
+}
+#define PRNT(x) {\
+			int size=0;\
+			interrupt(33,3,x,buffer,&size);\
+			buffer[7] = '2'; buffer[8] = '0';\
+			buffer[9] = '1'; buffer[10] = '9';\
+			interrupt(33,0,buffer,1,0);\
 }

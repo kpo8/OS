@@ -48,20 +48,26 @@ void arg1(char* s);
 
 //global buffer 
 char buffer[12288];
-char argv[15];
 
 void main()
 {
+//	int size =0;
 	//load configuration files
-	interrupt(33,2,buffer,258,0);
+/* 	interrupt(33,2,buffer,258,0);
 
+
+	interrupt(33,3,"test\0",buffer,&size);
+	buffer[7] = '2'; buffer[8] = '0';
+	buffer[9] = '1'; buffer[10] = '9';
+	interrupt(33,0,buffer,1,0);
+*/	
 	while(1)
 	{
 		char* n;
 		PRINTS("^(~(oo)~)^: \0");
 		SCANS(n);
 		terminalCommands(n);
-	}	
+	}
 }
 
 int stringCompare(char one[10], char two[10])
@@ -111,7 +117,7 @@ int getOption(char *s)
 void terminalCommands(char *s)
 {
 	PRINTS("\n\r\0");
-
+	
 	switch (getOption(s)) 
 	{
 		case BOOT0:
@@ -127,21 +133,27 @@ void terminalCommands(char *s)
 			break;
 		case ECHO4:
 			arg1(s);
-			PRINTS(argv);
+			PRINTS(s);
 			PRINTS("\n\r\0");
 			break;
-		case EXEC5: 
+		case EXEC5:
+			arg1(s);
+			EXEC(s);	
 			break;
 		case HELP6:
 			HELP;	
 			break;
-		case PRNT7: 
+		case PRNT7:
+		        arg1(s);
+			PRNT(s);	
 			break;
 		case REMV8: 
 			break;
 		case SENV9: 
 			break;
-		case SHOW10: 
+		case SHOW10:
+		        arg1(s);
+			SHOW(s);
 			break;
 		case TWET11: 
 			break;
@@ -185,9 +197,10 @@ void arg1(char *s)
 	a = 0;
 	while(file1[a] != '\0')
 	{
-		argv[a] = file1[a];
+		s[a] = file1[a];
 		++a;
 	}
+	s[a] = '\0';
 }
 
 
@@ -195,10 +208,9 @@ void forCopy(char* s)
 {
 	char file1[15];
 	char file2[15];
-	int size =0;
 	int i=5;   // ignores copy 
 	int a = 0;
-
+	int size =0;
 	while(s[i] != ' ')  // set file1 name
 	{
 		if (s[i] == ' ')
@@ -216,6 +228,7 @@ void forCopy(char* s)
 	file1[a]='\0';
 
 	a=0;
+	++i;
 	while(s[i] != '\0')  // set file2 name
 	{
 		if (s[i]=='\0')
@@ -229,7 +242,10 @@ void forCopy(char* s)
 	}
 	file2[a]='\0';
 
-	interrupt(33,3,file1,buffer,size);  // Won't compile, need size
+	interrupt(33,3,file1,buffer,&size);
+      	buffer[7] = '2'; buffer[8] = '0';
+	buffer[9] = '1'; buffer[10] = '9';
+//	interrupt(33,0,buffer,0,0);
 	interrupt(33,8,file2,buffer,size);
 }
 

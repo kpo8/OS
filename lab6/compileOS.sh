@@ -20,8 +20,12 @@ bcc -ansi -c -o kernel.o kernel.c
 ld86 -o kernel -d kernel.o kasm.o
 
 bcc -ansi -c -o fib.o fib.c
+bcc -ansi -c -o cal.o cal.c
+bcc -ansi -c -o t3.o t3.c
 as86 blackdos.asm -o bdos_asm.o
 ld86 -o fib -d fib.o bdos_asm.o
+ld86 -o cal -d cal.o bdos_asm.o
+ld86 -o t3 -d t3.o bdos_asm.o
 
 #copy kernel to image
 dd if=kernel of=floppya.img bs=512 conv=notrunc seek=259
@@ -41,6 +45,13 @@ echo "loading test exec"
 ./loadfile test
 echo "loading Stenv"
 ./loadfile Stenv
+
+echo "loading t3"
+./loadfile t3
+
+echo "loading cal"
+./loadfile cal
+
 
 #load shell to kernel
 echo "loading shell"

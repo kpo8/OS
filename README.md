@@ -4,3 +4,8 @@
 Compile:
 
       gcc myshell.c -o myshell -u ulimit
+
+
+Run:
+
+      ./myshell

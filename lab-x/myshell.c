@@ -254,7 +254,7 @@ void listDirectoryContents(int pid, int status) {
 
 	printf("\n");
 	// necessary to fork again, in order to use execvp twice for "L" command
-	
+
 	pid = fork(); 
 	if (pid == 0)
 		execvp("pwd",(char *const[]){"pwd", NULL});

@@ -19,7 +19,7 @@
 //
 //
 //
-// Signed: Garrett McDonnell	Date: 4/16/2019
+// Signed: Garrett McDonnell, Aleksandar Drobnjak, Kevin O'Neil	Date: 4/16/2019
 
 // 3460:426 Lab 4A - Basic C shell
 
@@ -72,7 +72,11 @@ int main(int argc, char *argv[]) {
       printPrompt();
       /* Read the command line and parse it */
       readCommand(cmdLine);
- 
+
+      // Checks to see if use pressed only the enter key, and then loops the prompt and takes input again
+      if(cmdLine[0] == '\n')
+ 	    continue;
+
       parseCommand(cmdLine, &command);
 
       command.argv[command.argc] = NULL;
@@ -155,6 +159,7 @@ bool checkMyCommands(struct command_t *command, int pid, int status) {
 	char* args[1];
 	args[0]='\0';
 
+	// Checks which command was issued and checks if the correct args were specified
 	if (strcmp(command->name,"C") == 0) {
 		if (command->argv[1] == NULL || command->argv[2] == NULL)
 			printf("%s\n", "Error: command not valid.  Press H for help menu.");
@@ -246,8 +251,11 @@ bool checkMyCommands(struct command_t *command, int pid, int status) {
 
 void listDirectoryContents(int pid, int status) {
 	char *argm[] = {"ls", "-l", 0}; 
+
 	printf("\n");
-	pid = fork();   // necessary to fork again, in order to use execvp twice for "L" command
+	// necessary to fork again, in order to use execvp twice for "L" command
+	
+	pid = fork(); 
 	if (pid == 0)
 		execvp("pwd",(char *const[]){"pwd", NULL});
 	if (pid > 0) {
